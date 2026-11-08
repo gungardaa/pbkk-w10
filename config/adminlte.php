@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 4',
+    'title' => 'Academic Portal - Admin',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -133,7 +133,7 @@ return [
     */
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
         'mode' => 'fullscreen',
         'img' => [
             'path' => 'vendor/adminlte/dist/assets/img/AdminLTELogo.png',
@@ -189,8 +189,8 @@ return [
     |
     */
 
-    'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'use_route_url' => true,
+    'dashboard_url' => 'admin.dashboard.index',
     'logout_url' => 'logout',
 
     // The HTTP method spoofed on the logout form. Set it to 'GET' when your
@@ -199,9 +199,9 @@ return [
     'logout_method' => null,
     'login_url' => 'login',
     'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
+    'password_reset_url' => 'password.request',
     'password_email_url' => 'password/email',
-    'profile_url' => false,
+    'profile_url' => 'profile.edit',
 
     /*
     |--------------------------------------------------------------------------
@@ -766,11 +766,6 @@ return [
     'menu' => [
         // Navbar items:
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
-        [
             'type' => 'darkmode-widget',
             'topnav_right' => true,
         ],
@@ -781,85 +776,16 @@ return [
 
         // Sidebar items:
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Dashboard',
+            'route' => 'admin.dashboard.index',
+            'icon' => 'fas fa-tachometer-alt',
+            'can' => 'view dashboard',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'bi bi-file-earmark',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'bi bi-person',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'bi bi-lock',
-        ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'bi bi-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'danger',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'warning',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'info',
-            'url' => '#',
+            'text' => 'Data Akademik',
+            'route' => 'academic-data.index',
+            'icon' => 'fas fa-database',
+            'can' => 'view data',
         ],
     ],
 

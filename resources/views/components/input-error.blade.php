@@ -1,4 +1,5 @@
-{{-- Input error message --}}
+@props(['messages'])
+
 @if ($messages)
     <ul {{ $attributes->merge(['class' => 'text-sm text-[var(--danger)] space-y-1']) }}>
         @foreach ((array) $messages as $message)

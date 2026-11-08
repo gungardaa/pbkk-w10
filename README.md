@@ -5,11 +5,11 @@
 This project is an extension of an existing Laravel-based academic portal. The implementation includes AdminLTE dashboard integration, Laravel Breeze authentication, and Role-Based Access Control (RBAC) using Spatie Laravel Permission. The system is designed to provide clearly differentiated access permissions between Admin and Staff roles.
 
 **Technologies Used:**
-- Laravel Framework 13.17
+- Laravel Framework 13.31.0
 - AdminLTE v4.0.1 (via `jeroennoten/laravel-adminlte`)
-- Laravel Breeze 1.29.1
+- Laravel Breeze 2.4.2
 - Spatie Laravel Permission 8.5.0
-- PHP 8.3
+- PHP 8.4.13
 - SQLite (default database)
 
 ---
@@ -56,24 +56,23 @@ This project is an extension of an existing Laravel-based academic portal. The i
 | View dashboard | ✅ | ✅ |
 | View academic data | ✅ | ✅ |
 | Add academic data | ✅ | ✅ |
-| Edit academic data | ✅ | ✅ |
+| Edit academic data | ✅ | ❌ |
 | Delete academic data | ✅ | ❌ |
-| Manage users | ✅ | ❌ |
-| Direct URL access | ✅ | ❌ (returns HTTP 403) |
 | Delete button in Blade | ✅ Visible | ❌ Hidden |
+| Direct URL access to delete | ✅ | ❌ (returns HTTP 403) |
 
 ### 5. Blade-Level Access Control
 
-- Admin-exclusive elements, particularly delete buttons and user management menus, are only displayed to users with the Admin role.
-- Uses Blade directives such as `@can('delete data')` and `@role('admin')`.
+- Admin-exclusive elements, particularly the delete button, are only displayed to users with the Admin role.
+- Delete button uses the `@role('admin')` directive, while the edit button uses `@can('edit data')`.
 - Delete functionality is protected through three layers:
-  - **Blade:** Hides the delete button.
-  - **Route:** Restricts access using middleware.
-  - **Controller:** Performs server-side authorization checks.
+  - **Blade:** Hides the delete button from non-admin users.
+  - **Route:** Restricts access using the `permission:delete data` middleware.
+  - **Controller/Server:** The delete request is rejected with HTTP 403 before the model is touched.
 
 ### 6. Route Protection
 
-- Sensitive routes are protected using `permission:` middleware in the controller constructor.
+- Sensitive routes are protected using `permission:` route middleware.
 - Admin routes are grouped under `auth` and `verified` middleware.
 - Auto-login routes are only available in the `local` or `testing` environments.
 
@@ -117,7 +116,7 @@ This project is an extension of an existing Laravel-based academic portal. The i
 ### 1. Navigate to the Project Directory
 
 ```bash
-cd "D:\Documents\Coding\Pemrograman Berbasis Kerangka Kerja\PBKK-Tugas-10"
+cd /path/to/PBKK-Tugas-10
 ```
 
 ### 2. Install Composer Dependencies
@@ -165,7 +164,8 @@ Configure the database settings in the `.env` file:
 
 ```env
 DB_CONNECTION=sqlite
-DB_DATABASE=database/database.sqlite
+# Use an absolute path for SQLite on Laravel 11+
+DB_DATABASE=/absolute/path/to/database/database.sqlite
 ```
 
 ### 8. Run Migrations and Seed the Database
@@ -208,7 +208,7 @@ php artisan serve
 
 - 50 dummy academic records generated using Faker.
 - 1 Admin account (`admin@demo.local`, role: admin, all permissions).
-- 1 Staff account (`staf@demo.local`, role: staf, view/create/edit permissions without delete access).
+- 1 Staff account (`staf@demo.local`, role: staf, permissions: view dashboard, view data, create data — no edit/delete access).
 
 ### Commands to Run the Seeder
 
@@ -224,7 +224,7 @@ php artisan migrate:fresh --seed
 - **Admin:** `admin@demo.local` – Password: `password123`, Role: admin.
 - **Staff:** `staf@demo.local` – Password: `password123`, Role: staf.
 
-**Note:** Passwords are not displayed in the public README. For local evaluation, access is available through the auto-login buttons on the login page or by navigating to the login URL and entering the credentials above.
+**Note:** The demo credentials above are for local evaluation only. You can also use the auto-login buttons on the login page, or navigate to the login URL and enter the credentials manually.
 
 ---
 
@@ -235,14 +235,14 @@ php artisan migrate:fresh --seed
 | view dashboard | ✅ | ✅ |
 | view data | ✅ | ✅ |
 | create data | ✅ | ✅ |
-| edit data | ✅ | ✅ |
+| edit data | ✅ | ❌ |
 | delete data | ✅ | ❌ |
 | manage users | ✅ | ❌ |
 
 **Explanation:**
 - Admin has all 6 permissions listed above.
-- Staff has only 4 permissions: view dashboard, view data, create data, and edit data.
-- Delete functionality and user management are exclusively available to Admin.
+- Staff has only 3 permissions: view dashboard, view data, and create data.
+- Edit and delete functionality are exclusively available to Admin (the `manage users` permission is defined but no user-management screen is exposed in this build).
 
 ---
 
@@ -282,18 +282,17 @@ php artisan migrate:fresh --seed
 
 1. **Admin Access:**
    - The Admin dashboard displays all 4 statistics widgets.
-   - The "Add Data" and "Manage Users" buttons are visible.
+   - The "Add Data" button is visible.
    - Admin can create, edit, and delete academic records.
 
 2. **Staff Access:**
-   - The dashboard is accessible but displays only 3 main statistics widgets (without detailed role/permission statistics).
-   - The "Manage Users" button is not visible.
-   - The delete button is hidden through Blade authorization directives.
-   - Staff can view, add, and edit records but **cannot delete them**.
+   - The dashboard is accessible and displays the same 4 statistics widgets.
+   - The delete button is hidden through the `@role('admin')` Blade directive.
+   - Staff can view and add records but **cannot edit or delete them** (edit data and delete data are admin-only).
 
 3. **Role-Based Menu Visibility:**
-   - The "User Management" menu is only visible to Admin.
-   - Standard menus (Dashboard, Data) are visible to both roles.
+   - Both roles see the "Dashboard" and "Data Akademik" menu items.
+   - There is no separate user-management screen exposed in this build.
 
 4. **Admin-Only Delete Operations:**
    - Staff cannot see the delete button.
@@ -306,10 +305,11 @@ php artisan migrate:fresh --seed
 ### Dashboard
 
 1. **At Least Three Dynamic Statistics Widgets:**
-   - Total Users: `{{ User::count() }}`
-   - Total Academic Records: `{{ AcademicData::count() }}`
-   - Total Roles: `{{ Role::count() }}`
-   - Total Permissions: `{{ Permission::count() }}`
+   - The `AdminDashboardController::index()` runs four `Model::count()` queries and passes them to the view.
+   - Total Users: `User::count()`
+   - Total Academic Records: `AcademicData::count()`
+   - Total Roles: `Role::count()`
+   - Total Permissions: `Permission::count()`
 
 2. **Data Accuracy:**
    - All widget values must match the actual number of records stored in the database.

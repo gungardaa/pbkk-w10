@@ -116,17 +116,9 @@ require __DIR__.'/auth.php';
 // Auto-login test accounts (development only, must stay outside auth middleware)
 if (app()->environment('local') || app()->environment('testing')) {
     Route::get('/auto-login/{role}', function ($role) {
-        if ($role === 'admin') {
-            $user = \App\Models\User::role('admin')->first();
-        } elseif ($role === 'staf') {
-            $user = \App\Models\User::role('staf')->first();
-        } else {
-            abort(404);
-        }
+        $user = \App\Models\User::whereHas('roles', fn ($q) => $q->where('name', $role))->first();
 
-        if (! $user) {
-            abort(404);
-        }
+        abort_unless($user, 404);
 
         \Illuminate\Support\Facades\Auth::login($user);
         return redirect()->route('admin.dashboard.index');
@@ -137,6 +129,7 @@ if (app()->environment('local') || app()->environment('testing')) {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin Dashboard
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
+        ->middleware('permission:view dashboard')
         ->name('admin.dashboard.index');
     
 

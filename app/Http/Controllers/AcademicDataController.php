@@ -33,9 +33,11 @@ class AcademicDataController extends Controller
             $q->where('prodi', $request->prodi);
         });
 
-        // Sort by column
-        $sortField = $request->get('sort', 'created_at');
-        $sortDirection = $request->get('direction', 'desc');
+        // Sort by whitelisted column; arbitrary input would otherwise break the query
+        $sortField = in_array($request->get('sort'), ['nama', 'nim', 'prodi', 'fakultas', 'angkatan', 'created_at'], true)
+            ? $request->get('sort')
+            : 'created_at';
+        $sortDirection = $request->get('direction') === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortField, $sortDirection);
 
         // Paginate with query string preservation
@@ -94,36 +96,36 @@ class AcademicDataController extends Controller
     /**
      * Display the specified academic data.
      */
-    public function show(AcademicData $academicData)
+    public function show(AcademicData $academicDatum)
     {
-        return view('admin.academic-data.show', compact('academicData'));
+        return view('admin.academic-data.show', ['academicData' => $academicDatum]);
     }
 
     /**
      * Show the form for editing the specified academic data.
      */
-    public function edit(AcademicData $academicData)
+    public function edit(AcademicData $academicDatum)
     {
-        return view('admin.academic-data.form', compact('academicData'));
+        return view('admin.academic-data.form', ['academicData' => $academicDatum]);
     }
 
     /**
      * Update the specified academic data in storage.
      */
-    public function update(Request $request, AcademicData $academicData)
+    public function update(Request $request, AcademicData $academicDatum)
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'nim' => 'required|string|max:20|unique:academic_data,nim,' . $academicData->id,
+            'nim' => 'required|string|max:20|unique:academic_data,nim,' . $academicDatum->id,
             'prodi' => 'required|string|max:100',
             'fakultas' => 'required|string|max:100',
             'angkatan' => 'required|integer|min:2000|max:2030',
-            'email' => 'required|email|unique:academic_data,email,' . $academicData->id,
+            'email' => 'required|email|unique:academic_data,email,' . $academicDatum->id,
             'alamat' => 'nullable|string',
             'ipk' => 'nullable|numeric|between:0,4',
         ]);
 
-        $academicData->update($request->all());
+        $academicDatum->update($request->all());
 
         return redirect()->route('academic-data.index')
             ->with('success', 'Data akademik berhasil diperbarui.');
@@ -132,9 +134,9 @@ class AcademicDataController extends Controller
     /**
      * Remove the specified academic data from storage.
      */
-    public function destroy(AcademicData $academicData)
+    public function destroy(AcademicData $academicDatum)
     {
-        $academicData->delete();
+        $academicDatum->delete();
 
         return redirect()->route('academic-data.index')
             ->with('success', 'Data akademik berhasil dihapus.');

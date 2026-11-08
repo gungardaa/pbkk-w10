@@ -1,5 +1,8 @@
 <x-guest-layout>
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    {{-- Remove empty input field at top - kept x-auth-session-status only when there's a status --}}
+    @if (session('status'))
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+    @endif
 
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
@@ -18,7 +21,7 @@
 
         <div class="flex items-center justify-between mt-6">
             <label for="remember_me" class="inline-flex items-center text-sm text-[var(--body)] hover:text-[var(--hairline)] transition-colors cursor-pointer">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-700 bg-[var(--canvas)] text-cyan-500 focus:ring-cyan-500/50" name="remember">
+                <input id="remember_me" type="checkbox" class="remember-input w-4 h-4 rounded border-2 border-cyan-500 bg-transparent transition-colors checked:bg-cyan-600 focus:ring-cyan-500/50 cursor-pointer">
                 <span class="ms-2">{{ __('Remember me') }}</span>
             </label>
 
@@ -29,7 +32,7 @@
             @endif
         </div>
 
-        <x-primary-button class="w-full justify-center !py-3 !text-sm">
+        <x-primary-button class="w-full justify-center py-3 text-sm btn-dark-login">
             {{ __('Log in') }}
         </x-primary-button>
     </form>

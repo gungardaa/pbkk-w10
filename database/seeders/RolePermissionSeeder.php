@@ -42,7 +42,6 @@ class RolePermissionSeeder extends Seeder
             'view dashboard',
             'view data',
             'create data',
-            'edit data',
         ])->get();
         $staff->syncPermissions($staffPermissions);
     }

@@ -15,13 +15,13 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-[var(--ink)] antialiased bg-[var(--canvas)]">
-        <div class="fixed inset-0 -z-10">
+        <div class="fixed inset-0 -z-10 overflow-hidden">
             <div class="absolute inset-0 bg-grid"></div>
             <div class="glow-orb w-[480px] h-[480px] -top-40 left-1/2 -translate-x-1/2" style="background:rgba(36,96,173,.28)"></div>
             <div class="glow-orb w-[320px] h-[320px] top-1/3 -left-24" style="background:rgba(77,243,255,.10)"></div>
         </div>
 
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center py-6 sm:py-0">
             <div>
                 <a href="/" class="flex items-center gap-3">
                     <span class="font-display grid h-12 w-12 place-items-center rounded-xl text-lg font-bold text-[var(--on-accent)]" style="background:var(--hairline);box-shadow:0 0 18px rgba(77,243,255,.5)">AN</span>
@@ -36,7 +36,7 @@
                         <span class="terminal-dot" style="background:#28C840"></span>
                         <span class="font-mono2 ml-3 text-xs text-[var(--body)]">authentication console</span>
                     </div>
-                    <p class="font-mono2 text-[var(--hairline)] text-sm">$ auth --login</p>
+                    <p class="font-mono2 text-[var(--hairline)] text-sm">$ auth --forgot-password</p>
                 </div>
 
                 {{ $slot }}

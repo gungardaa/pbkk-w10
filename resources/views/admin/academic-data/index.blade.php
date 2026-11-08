@@ -79,7 +79,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
-                                    @can('delete data')
+                                    @role('admin')
                                         <form action="{{ route('academic-data.destroy', $data->id) }}" method="POST" style="display:inline"
                                               onsubmit="return confirm('Yakin menghapus data ini?')">
                                             @method('DELETE')
@@ -88,7 +88,7 @@
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
-                                    @endcan
+                                    @endrole
                                 </div>
                             </td>
                         </tr>

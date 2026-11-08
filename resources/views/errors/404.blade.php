@@ -2,8 +2,13 @@
 
 @section('title', 'Page Not Found')
 
+@php
+    $student = $student ?? [];
+    $missing = $missing ?? 'unknown path';
+@endphp
+
 @section('content')
-<section class="mx-auto max-w-2xl pt-16 text-center">
+<section class="mx-auto max-w-2xl flex-grow flex flex-col justify-center text-center py-12">
   <div class="terminal mx-auto overflow-hidden text-left" data-theme="dark">
     <div class="flex items-center gap-2 border-b border-cyan-200/10 px-5 py-3">
       <span class="terminal-dot" style="background:#FF5F57"></span>
@@ -22,7 +27,9 @@
   <div class="mt-7 flex flex-wrap justify-center gap-3">
     <a href="{{ route('home') }}" class="btn-glow rounded-xl px-5 py-3 text-sm font-bold">Back to home</a>
     <a href="{{ route('dashboard') }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">Open dashboard</a>
-    <a href="{{ route('mahasiswa.show', ['nrp' => $student['nrp']]) }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">See my profile</a>
+    @if (! empty($student['nrp']))
+        <a href="{{ route('mahasiswa.show', ['nrp' => $student['nrp']]) }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">See my profile</a>
+    @endif
   </div>
 </section>
 @endsection

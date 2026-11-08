@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard')
+@section('title', auth()->user()->hasRole('admin') ? 'Admin Dashboard' : 'Staf Dashboard')
 
 @section('content')
 <!-- Info boxes -->
@@ -64,13 +64,6 @@
                         <a href="{{ route('academic-data.index') }}" class="btn btn-success btn-block">
                             <i class="fas fa-list"></i> Lihat Semua Data
                         </a>
-                    </div>
-                    <div class="col-md-3">
-                        @can('manage users')
-                            <a href="#" class="btn btn-info btn-block">
-                                <i class="fas fa-users"></i> Kelola Pengguna
-                            </a>
-                        @endcan
                     </div>
                     <div class="col-md-3">
                         <a href="{{ route('home') }}" class="btn btn-secondary btn-block">

@@ -11,8 +11,8 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen antialiased" data-theme="{{ $theme ?? 'dark' }}">
-<div class="fixed inset-0 -z-10">
+<body class="min-h-screen flex flex-col antialiased overflow-x-hidden" data-theme="{{ $theme ?? 'dark' }}">
+<div class="fixed inset-0 -z-10 overflow-hidden">
     <div class="absolute inset-0 bg-grid"></div>
     <div class="glow-orb w-[480px] h-[480px] -top-40 left-1/2 -translate-x-1/2" style="background:rgba(36,96,173,.28)"></div>
     <div class="glow-orb w-[320px] h-[320px] top-1/3 -left-24" style="background:rgba(77,243,255,.10)"></div>
@@ -71,7 +71,7 @@
   </div>
 </header>
 
-<main class="mx-auto w-full max-w-6xl px-5 pb-24">
+<main class="flex-grow mx-auto w-full max-w-6xl px-5">
   @yield('content')
   @if (! empty($slot ?? null))
     <div class="mt-8">{{ $slot }}</div>
@@ -84,7 +84,6 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/adminlte@4.5.1/dist/js/adminlte.min.js"></script>
-@stack('scripts')
+
 </body>
 </html>
