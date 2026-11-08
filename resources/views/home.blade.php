@@ -21,7 +21,7 @@
     <div class="mt-7 flex flex-wrap gap-3">
       <a href="{{ route('mahasiswa.show', ['nrp' => $student['nrp']]) }}" class="btn-glow rounded-xl px-5 py-3 text-sm font-bold">See my full profile</a>
       <a href="{{ route('agent.show') }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">Meet my agent ideas</a>
-      <a href="{{ route('dashboard.index') }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">Open dashboard</a>
+      <a href="{{ route('dashboard') }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">Open dashboard</a>
     </div>
     <div class="mt-8 grid max-w-xl grid-cols-3 gap-3 text-center">
       <div class="card p-4">

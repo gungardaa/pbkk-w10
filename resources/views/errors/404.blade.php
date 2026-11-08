@@ -21,7 +21,7 @@
   <p class="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--body)]">That address does not exist here. Let us take you back to safe ground.</p>
   <div class="mt-7 flex flex-wrap justify-center gap-3">
     <a href="{{ route('home') }}" class="btn-glow rounded-xl px-5 py-3 text-sm font-bold">Back to home</a>
-    <a href="{{ route('dashboard.index') }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">Open dashboard</a>
+    <a href="{{ route('dashboard') }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">Open dashboard</a>
     <a href="{{ route('mahasiswa.show', ['nrp' => $student['nrp']]) }}" class="btn-ghost rounded-xl px-5 py-3 text-sm">See my profile</a>
   </div>
 </section>

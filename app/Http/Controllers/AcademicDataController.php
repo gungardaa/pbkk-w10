@@ -7,15 +7,6 @@ use Illuminate\Http\Request;
 
 class AcademicDataController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-        $this->middleware('permission:view data')->only(['index', 'show']);
-        $this->middleware('permission:create data')->only(['create', 'store']);
-        $this->middleware('permission:edit data')->only(['edit', 'update']);
-        $this->middleware('permission:delete data')->only(['destroy']);
-    }
-
     /**
      * Display a listing of the academic data with search and pagination.
      */

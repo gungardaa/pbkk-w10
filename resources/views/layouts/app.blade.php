@@ -36,9 +36,9 @@
       <a href="{{ request()->fullUrlWithQuery(['mode' => $theme === 'dark' ? 'light' : 'dark']) }}" class="btn-ghost rounded-xl px-4 py-2 text-sm font-bold" aria-label="Toggle color theme">{{ $theme === 'dark' ? '☀ Light' : '🌙 Dark' }}</a>
       @auth
         @if (app()->environment('local') || app()->environment('testing'))
-          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold">Dashboard</a>
+          <a href="{{ route('dashboard') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold">Dashboard</a>
         @else
-          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold" aria-disabled="true" style="opacity: .6;">Dashboard</a>
+          <a href="{{ route('dashboard') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold" aria-disabled="true" style="opacity: .6;">Dashboard</a>
         @endif
         <form method="POST" action="{{ route('logout') }}" class="inline" @csrf>
           <button type="submit" class="btn-ghost rounded-xl px-4 py-2 text-sm font-bold">Logout</button>
@@ -57,9 +57,9 @@
       <a href="{{ route('ipk.hitung', ['ip1' => '3.50', 'ip2' => '3.80']) }}" class="nav-link">GPA Calc</a>
       @auth
         @if (app()->environment('local') || app()->environment('testing'))
-          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-center text-sm font-bold">Dashboard</a>
+          <a href="{{ route('dashboard') }}" class="btn-glow rounded-xl px-4 py-2 text-center text-sm font-bold">Dashboard</a>
         @else
-          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-center text-sm font-bold" aria-disabled="true" style="opacity: .6;">Dashboard</a>
+          <a href="{{ route('dashboard') }}" class="btn-glow rounded-xl px-4 py-2 text-center text-sm font-bold" aria-disabled="true" style="opacity: .6;">Dashboard</a>
         @endif
         <form method="POST" action="{{ route('logout') }}" class="mt-2">
           <button type="submit" class="btn-ghost rounded-xl px-4 py-2 text-center text-sm font-bold">Logout</button>

@@ -1,3 +1,3 @@
-<div {{ $attributes->merge(['class' => 'rounded-xl border p-4 text-sm leading-relaxed text-[var(--ink)] bg-[var(--panel)] border-t border-cyan-200/15 border-b border-cyan-200/15', $attributes->except('class')]) }}>
+<div {{ $attributes->merge(['class' => 'rounded-xl border border-cyan-200/15 bg-cyan-200/5 text-[var(--ink)] p-4 text-sm leading-relaxed']) }}>
     {{ $slot }}
 </div>

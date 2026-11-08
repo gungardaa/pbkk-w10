@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="pt-12">
-  <a href="{{ isset($fromDashboard) ? route('dashboard.index') : route('home') }}" class="btn-ghost inline-block rounded-xl px-4 py-2 text-sm">Back {{ isset($fromDashboard) ? 'to dashboard' : 'to home' }}</a>
+  <a href="{{ isset($fromDashboard) ? route('dashboard') : route('home') }}" class="btn-ghost inline-block rounded-xl px-4 py-2 text-sm">Back {{ isset($fromDashboard) ? 'to dashboard' : 'to home' }}</a>
   <div class="mt-6 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
     <div class="card reveal visible p-8 lg:sticky lg:top-24 lg:self-start">
       <div class="font-display grid h-20 w-20 place-items-center rounded-2xl text-2xl font-bold text-[var(--on-accent)]" style="background:linear-gradient(135deg,var(--hairline),#76A8FF);box-shadow:0 0 30px rgba(77,243,255,.35)">AN</div>

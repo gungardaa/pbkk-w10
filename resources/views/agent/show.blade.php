@@ -8,7 +8,7 @@
 @else
 <section class="pt-12">
   <div class="flex flex-wrap items-center gap-3">
-    <a href="{{ isset($fromDashboard) ? route('dashboard.index') : route('home') }}" class="btn-ghost rounded-xl px-4 py-2 text-sm">Back {{ isset($fromDashboard) ? 'to dashboard' : 'to home' }}</a>
+    <a href="{{ isset($fromDashboard) ? route('dashboard') : route('home') }}" class="btn-ghost rounded-xl px-4 py-2 text-sm">Back {{ isset($fromDashboard) ? 'to dashboard' : 'to home' }}</a>
     @if ($isFallback && ! empty($requested))
       <span class="badge">Fallback active, showing default</span>
     @endif

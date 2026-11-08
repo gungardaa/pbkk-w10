@@ -1,7 +1,7 @@
 {{-- MAGENTIC pitch, ported from Tugas-1 /project-idea and re-skinned to Tugas-3 tokens. --}}
 <section class="pt-12">
   <div class="flex flex-wrap items-center gap-3">
-    <a href="{{ isset($fromDashboard) ? route('dashboard.index') : route('home') }}" class="btn-ghost rounded-xl px-4 py-2 text-sm">Back {{ isset($fromDashboard) ? 'to dashboard' : 'to home' }}</a>
+    <a href="{{ isset($fromDashboard) ? route('dashboard') : route('home') }}" class="btn-ghost rounded-xl px-4 py-2 text-sm">Back {{ isset($fromDashboard) ? 'to dashboard' : 'to home' }}</a>
     <span class="badge">Magentic theme</span>
     <span class="font-mono2 text-xs text-[var(--acc2)]">/agent/magentic</span>
   </div>

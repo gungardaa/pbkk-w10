@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="mx-auto max-w-3xl pt-12">
-  <a href="{{ route('dashboard.index') }}" class="btn-ghost inline-block rounded-xl px-4 py-2 text-sm">Back to dashboard</a>
+  <a href="{{ route('dashboard') }}" class="btn-ghost inline-block rounded-xl px-4 py-2 text-sm">Back to dashboard</a>
   <div class="card mt-6 p-8 md:p-10">
     <p class="font-mono2 text-xs tracking-widest text-[var(--hairline)]">INTERACTIVE GPA FORM</p>
     <h1 class="font-display mt-3 text-4xl font-bold">Type two scores, get the link</h1>

@@ -71,22 +71,14 @@ Route::get('/hitung-ipk/{ip1}/{ip2}', function (string $ip1, string $ip2) {
     ]);
 })->where(['ip1' => '[0-9]+(?:\.[0-9]+)?', 'ip2' => '[0-9]+(?:\.[0-9]+)?'])->name('ipk.hitung');
 
-// Dashboard alias for test compatibility
-Route::get('/dashboard', function () {
-    return view('dashboard.index', [
-        'student' => AcademicData::student(),
-        'agents' => AcademicData::agents(),
-    ]);
-})->name('dashboard');
-
 // Dashboard group (public)
-Route::prefix('dashboard')->name('dashboard.')->group(function () {
+Route::prefix('dashboard')->group(function () {
     Route::get('/', function () {
         return view('dashboard.index', [
             'student' => AcademicData::student(),
             'agents' => AcademicData::agents(),
         ]);
-    })->name('index');
+    })->name('dashboard');
 
     Route::get('/profil/{nrp}', function (string $nrp) {
         $student = AcademicData::student();
@@ -99,11 +91,11 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
             'student' => $student,
             'fromDashboard' => true,
         ]);
-    })->where('nrp', '[0-9]{10}')->name('profil');
+    })->where('nrp', '[0-9]{10}')->name('dashboard.profil');
 
     Route::get('/ipk', function () {
         return view('dashboard.ipk', ['student' => AcademicData::student()]);
-    })->name('ipk');
+    })->name('dashboard.ipk');
 
     Route::get('/agent/{tema?}', function (?string $tema = null) {
         $agent = AcademicData::findAgent($tema);
@@ -115,11 +107,31 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
             'isFallback' => AcademicData::isFallbackTheme($tema),
             'fromDashboard' => true,
         ]);
-    })->name('agent');
+    })->name('dashboard.agent');
 });
 
 // Auth routes from Breeze
 require __DIR__.'/auth.php';
+
+// Auto-login test accounts (development only, must stay outside auth middleware)
+if (app()->environment('local') || app()->environment('testing')) {
+    Route::get('/auto-login/{role}', function ($role) {
+        if ($role === 'admin') {
+            $user = \App\Models\User::role('admin')->first();
+        } elseif ($role === 'staf') {
+            $user = \App\Models\User::role('staf')->first();
+        } else {
+            abort(404);
+        }
+
+        if (! $user) {
+            abort(404);
+        }
+
+        \Illuminate\Support\Facades\Auth::login($user);
+        return redirect()->route('admin.dashboard.index');
+    })->name('auto.login');
+}
 
 // Admin routes (protected by auth + permission)
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -130,27 +142,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // Academic Data CRUD
-    Route::resource('academic-data', AcademicDataController::class);
+    Route::resource('academic-data', AcademicDataController::class)
+        ->middlewareFor(['index', 'show'], 'permission:view data')
+        ->middlewareFor(['create', 'store'], 'permission:create data')
+        ->middlewareFor(['edit', 'update'], 'permission:edit data')
+        ->middlewareFor('destroy', 'permission:delete data');
 
-    // Auto-login test accounts (development only)
-    if (app()->environment('local') || app()->environment('testing')) {
-        Route::get('/auto-login/{role}', function ($role) {
-            if ($role === 'admin') {
-                $user = \App\Models\User::role('admin')->first();
-            } elseif ($role === 'staf') {
-                $user = \App\Models\User::role('staf')->first();
-            } else {
-                abort(404);
-            }
-
-            if (! $user) {
-                abort(404);
-            }
-
-            \Illuminate\Support\Facades\Auth::login($user);
-            return redirect()->route('admin.dashboard.index');
-        })->name('auto.login');
-    }
 });
 
 // Fallback for unknown URLs
