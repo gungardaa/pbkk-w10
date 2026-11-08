@@ -1,7 +1,3 @@
-@props(['status'])
-
-@if ($status)
-    <div {{ $attributes->merge(['class' => 'font-medium text-sm text-green-600 dark:text-green-400']) }}>
-        {{ $status }}
-    </div>
-@endif
+<div {{ $attributes->merge(['class' => 'rounded-xl border p-4 text-sm leading-relaxed text-[var(--ink)] bg-[var(--panel)] border-t border-cyan-200/15 border-b border-cyan-200/15', $attributes->except('class')]) }}>
+    {{ $slot }}
+</div>

@@ -34,7 +34,18 @@
       <a href="{{ route('agent.show') }}" class="nav-link {{ request()->routeIs('agent.show', 'ide-agent') ? 'active' : '' }}">Agents</a>
       <a href="{{ route('ipk.hitung', ['ip1' => '3.50', 'ip2' => '3.80']) }}" class="nav-link {{ request()->routeIs('ipk.hitung') ? 'active' : '' }}">GPA Calc</a>
       <a href="{{ request()->fullUrlWithQuery(['mode' => $theme === 'dark' ? 'light' : 'dark']) }}" class="btn-ghost rounded-xl px-4 py-2 text-sm font-bold" aria-label="Toggle color theme">{{ $theme === 'dark' ? '☀ Light' : '🌙 Dark' }}</a>
-      <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold">Dashboard</a>
+      @auth
+        @if (app()->environment('local') || app()->environment('testing'))
+          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold">Dashboard</a>
+        @else
+          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold" aria-disabled="true" style="opacity: .6;">Dashboard</a>
+        @endif
+        <form method="POST" action="{{ route('logout') }}" class="inline" @csrf>
+          <button type="submit" class="btn-ghost rounded-xl px-4 py-2 text-sm font-bold">Logout</button>
+        </form>
+      @else
+        <a href="{{ route('login') }}" class="btn-glow rounded-xl px-4 py-2 text-sm font-bold">Login</a>
+      @endauth
     </nav>
     <button id="menuBtn" class="btn-ghost rounded-xl px-4 py-2 text-sm md:hidden" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
   </div>
@@ -44,14 +55,27 @@
       <a href="{{ route('profil') }}" class="nav-link">Profil</a>
       <a href="{{ route('agent.show') }}" class="nav-link">Agents</a>
       <a href="{{ route('ipk.hitung', ['ip1' => '3.50', 'ip2' => '3.80']) }}" class="nav-link">GPA Calc</a>
-      <a href="{{ request()->fullUrlWithQuery(['mode' => $theme === 'dark' ? 'light' : 'dark']) }}" class="btn-ghost rounded-xl px-4 py-2 text-center text-sm font-bold">{{ $theme === 'dark' ? '☀ Light' : '🌙 Dark' }}</a>
-      <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-center font-bold">Dashboard</a>
+      @auth
+        @if (app()->environment('local') || app()->environment('testing'))
+          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-center text-sm font-bold">Dashboard</a>
+        @else
+          <a href="{{ route('dashboard.index') }}" class="btn-glow rounded-xl px-4 py-2 text-center text-sm font-bold" aria-disabled="true" style="opacity: .6;">Dashboard</a>
+        @endif
+        <form method="POST" action="{{ route('logout') }}" class="mt-2">
+          <button type="submit" class="btn-ghost rounded-xl px-4 py-2 text-center text-sm font-bold">Logout</button>
+        </form>
+      @else
+        <a href="{{ route('login') }}" class="btn-glow rounded-xl px-4 py-2 text-center text-sm font-bold">Login</a>
+      @endauth
     </div>
   </div>
 </header>
 
 <main class="mx-auto w-full max-w-6xl px-5 pb-24">
   @yield('content')
+  @if (! empty($slot ?? null))
+    <div class="mt-8">{{ $slot }}</div>
+  @endif
 </main>
 
 <footer class="border-t border-cyan-200/10">
@@ -62,3 +86,5 @@
 
 <script src="https://cdn.jsdelivr.net/npm/adminlte@4.5.1/dist/js/adminlte.min.js"></script>
 @stack('scripts')
+</body>
+</html>

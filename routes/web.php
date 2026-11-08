@@ -71,6 +71,14 @@ Route::get('/hitung-ipk/{ip1}/{ip2}', function (string $ip1, string $ip2) {
     ]);
 })->where(['ip1' => '[0-9]+(?:\.[0-9]+)?', 'ip2' => '[0-9]+(?:\.[0-9]+)?'])->name('ipk.hitung');
 
+// Dashboard alias for test compatibility
+Route::get('/dashboard', function () {
+    return view('dashboard.index', [
+        'student' => AcademicData::student(),
+        'agents' => AcademicData::agents(),
+    ]);
+})->name('dashboard');
+
 // Dashboard group (public)
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', function () {

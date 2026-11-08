@@ -5,11 +5,11 @@
 This project is an extension of an existing Laravel-based academic portal. The implementation includes AdminLTE dashboard integration, Laravel Breeze authentication, and Role-Based Access Control (RBAC) using Spatie Laravel Permission. The system is designed to provide clearly differentiated access permissions between Admin and Staff roles.
 
 **Technologies Used:**
-- Laravel Framework ^13.17
+- Laravel Framework 13.17
 - AdminLTE v4.0.1 (via `jeroennoten/laravel-adminlte`)
-- Laravel Breeze ^1.29.1
-- Spatie Laravel Permission ^8.5.0
-- PHP ^8.3
+- Laravel Breeze 1.29.1
+- Spatie Laravel Permission 8.5.0
+- PHP 8.3
 - SQLite (default database)
 
 ---

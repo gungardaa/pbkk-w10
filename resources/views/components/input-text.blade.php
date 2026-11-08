@@ -1,0 +1,1 @@
+<input {{ $attributes->merge(['class' => 'block w-full rounded-lg border border-cyan-200/20 bg-[var(--canvas)] text-[var(--ink)] py-2 px-3 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[var(--hairline)] focus:border-transparent appearance-none transition-colors duration-150', $attributes->except('class')]) ]} {{ $slot }} />
