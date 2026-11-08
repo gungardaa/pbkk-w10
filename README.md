@@ -1,217 +1,331 @@
-# Academic Profile and Agent Ideas
+# Individual Assignment: Dashboard & RBAC Implementation
 
-A small personal academic website built for a campus assignment at ITS. It shows a student profile, a visual pitch for a group Agentic AI platform called MAGENTIC, and keeps the routing exercises from earlier weeks working.
+## Project Overview
 
-## About Me
+This project is an extension of an existing Laravel-based academic portal. The implementation includes AdminLTE dashboard integration, Laravel Breeze authentication, and Role-Based Access Control (RBAC) using Spatie Laravel Permission. The system is designed to provide clearly differentiated access permissions between Admin and Staff roles.
 
-My name is Anak Agung Putu Arda Nareswara. You can call me Arda Nareswara. My student number is `5025241074`. I study Informatics Engineering at Institut Teknologi Sepuluh Nopember, batch 2024.
+**Technologies Used:**
+- Laravel Framework ^13.17
+- AdminLTE v4.0.1 (via `jeroennoten/laravel-adminlte`)
+- Laravel Breeze ^1.29.1
+- Spatie Laravel Permission ^8.5.0
+- PHP ^8.3
+- SQLite (default database)
 
-## About This Project
+---
 
-Three content pages run through one `PageController`:
+## Implemented Features
 
-1. **Beranda** at `/` (also `/beranda`) with a warm ITS welcome.
-2. **Profil Mahasiswa** at `/profil-mahasiswa`, the same profile content as the NRP route, without needing the number in the URL.
-3. **Ide Agent** at `/ide-agent`, which shows the MAGENTIC platform pitch, the same page as `/agent/magentic`.
+### 1. AdminLTE Dashboard
 
-All pages extend one master layout, `layouts/app.blade.php`, which holds the dynamic title, the static navbar, the content container, and the ITS footer. Two reusable Blade components carry the repeating UI: `x-info-card` for profile data and `x-status-banner` for notifications such as the welcome greeting.
+- Dashboard uses the AdminLTE layout integrated with Laravel.
+- Dashboard is accessible through the `/admin/dashboard` route.
+- Displays 4 dynamic statistics widgets:
+  - Total Users (calculated from the `users` table).
+  - Total Academic Records (calculated from the `academic_data` table).
+  - Total Roles (calculated from Spatie's `roles` table).
+  - Total Permissions (calculated from Spatie's `permissions` table).
+- All statistics are retrieved from actual database queries using the `count()` method.
 
-Older features still work next to the new pages: the required-NRP profile route, the optional-theme agent route, the GPA calculator, the dashboard group, and the fallback page.
+### 2. Laravel Breeze Authentication
 
-Every link on this site goes through a **named route**. There are no hardcoded URLs.
+- Complete login, registration, and logout functionality.
+- `auth` and `verified` middleware protect restricted pages.
+- Admin login: `admin@demo.local` / `password123`
+- Staff login: `staf@demo.local` / `password123`
+- Auto-login buttons are available on the login page for development/testing purposes.
 
-## Dark and light theme
+### 3. Spatie Roles and Permissions
 
-The site is dark by default. Add `?mode=light` to any address, for example `/ide-agent?mode=light`, to switch the whole site to a light blueprint theme. Use `?mode=dark` to go back. The choice is kept in the session, so it stays while you move between pages until you change it. The navbar also has a toggle button that flips the theme on the page you are reading.
+**Roles:**
+- `admin` – Has full access to all application features.
+- `staf` – Has limited access according to assigned permissions.
 
-A personal greeting works through the `user` parameter: `/beranda?user=Andi` shows `Selamat datang, Andi!`
+**Permissions:**
+- `view dashboard` – View the dashboard.
+- `view data` – View academic records.
+- `create data` – Add academic records.
+- `edit data` – Edit academic records.
+- `delete data` – Delete academic records (Admin only).
+- `manage users` – Manage users (Admin only).
 
-## Tech Used
+### 4. Differences Between Admin and Staff Access
 
-- Laravel 13
-- Blade Templates with layout inheritance and components
-- Tailwind CSS v4 compiled locally with Vite and NPM (no CSS CDN)
-- Vanilla JavaScript
-- PHP
-- Fonts bundled at build time through the Vite plugin
+| Feature | Admin | Staff |
+|---|---|---|
+| View dashboard | ✅ | ✅ |
+| View academic data | ✅ | ✅ |
+| Add academic data | ✅ | ✅ |
+| Edit academic data | ✅ | ✅ |
+| Delete academic data | ✅ | ❌ |
+| Manage users | ✅ | ❌ |
+| Direct URL access | ✅ | ❌ (returns HTTP 403) |
+| Delete button in Blade | ✅ Visible | ❌ Hidden |
 
-No additional database setup is required. Laravel migrations will automatically create the required tables. The application data is stored in a single PHP class under:
+### 5. Blade-Level Access Control
 
-```text
-app/Support
-```
+- Admin-exclusive elements, particularly delete buttons and user management menus, are only displayed to users with the Admin role.
+- Uses Blade directives such as `@can('delete data')` and `@role('admin')`.
+- Delete functionality is protected through three layers:
+  - **Blade:** Hides the delete button.
+  - **Route:** Restricts access using middleware.
+  - **Controller:** Performs server-side authorization checks.
 
-The database is only used for Laravel framework features such as session management, which also keeps the theme choice.
+### 6. Route Protection
 
-## Getting the Code
+- Sensitive routes are protected using `permission:` middleware in the controller constructor.
+- Admin routes are grouped under `auth` and `verified` middleware.
+- Auto-login routes are only available in the `local` or `testing` environments.
 
-### Option 1: Download ZIP
+### 7. Dynamic Statistics Widgets
 
-Download the ZIP file from the repository page on GitHub and extract it anywhere you like.
+- At least 3 dynamic statistics widgets are required (4 have been implemented).
+- Each widget uses a `Model::count()` query to retrieve actual database record counts.
+- Statistics are passed from the Controller to the Blade view.
 
-### Option 2: Clone with HTTPS
+### 8. Search Functionality Using `when()`
+
+- A search form is available on the academic data page.
+- Uses Laravel's conditional query method `when()`.
+- Supports searching by name, student ID (NIM), or study program.
+- Search parameters are preserved when navigating between pages using `withQueryString()`.
+
+### 9. Pagination Using `withQueryString()`
+
+- Pagination displays 10 records per page.
+- Uses `->paginate(10)->withQueryString()` to preserve search parameters.
+- When navigating between pages, the search keyword remains available in the URL.
+
+### 10. Faker Dummy Data Seeder
+
+- Automatically generates 50 dummy academic records using Faker.
+- Generated data includes: name, student ID (NIM), study program, faculty, enrollment year, email, address, and GPA.
+- Creates demo Admin and Staff accounts with their respective roles and permissions.
+
+### 11. Auto-Login Test Accounts
+
+- Provides instant login buttons for development/testing purposes.
+- Admin auto-login authenticates the `admin@demo.local` account.
+- Staff auto-login authenticates the `staf@demo.local` account.
+- Each account is assigned the appropriate role and permissions.
+- This feature is disabled in the production environment.
+
+---
+
+## Installation and Configuration Steps
+
+### 1. Navigate to the Project Directory
 
 ```bash
-git clone https://github.com/gungardaa/pbkk-w4.git
+cd "D:\Documents\Coding\Pemrograman Berbasis Kerangka Kerja\PBKK-Tugas-10"
 ```
 
-### Option 3: Clone with SSH
-
-```bash
-git clone git@github.com:gungardaa/pbkk-w4.git
-```
-
-## Run It Locally
-
-You need:
-
-* PHP 8.3 or newer
-* Composer
-* Node 22 or newer with npm
-
-### 1. Move into the project folder
-
-```bash
-cd pbkk-w4
-```
-
-### 2. Install PHP dependencies
+### 2. Install Composer Dependencies
 
 ```bash
 composer install
 ```
 
-### 3. Install JS dependencies and build the CSS
+### 3. Install npm Dependencies
 
 ```bash
 npm install
-npm run build
 ```
 
-### 4. Create the local environment file
-
-On Linux or macOS:
+### 4. Install Laravel Breeze
 
 ```bash
-cp .env.example .env
+composer require laravel/breeze --dev
+php artisan breeze:install blade
 ```
 
-On Windows Command Prompt or PowerShell:
-
-```powershell
-copy .env.example .env
-```
-
-### 5. Generate the application key
+### 5. Install AdminLTE
 
 ```bash
-php artisan key:generate
+composer require jeroennoten/laravel-adminlte
+php artisan adminlte:install
 ```
 
-### 6. Run database migrations
-
-Create the required database tables:
+### 6. Install Spatie Permission
 
 ```bash
+composer require spatie/laravel-permission
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 php artisan migrate
 ```
 
-### 7. Start the Laravel development server
+### 7. Configure the `.env` File and Database
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Configure the database settings in the `.env` file:
+
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+```
+
+### 8. Run Migrations and Seed the Database
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+### 9. Build Frontend Assets
+
+```bash
+npm run build
+```
+
+### 10. Start the Laravel Development Server
 
 ```bash
 php artisan serve
 ```
 
-Open the address shown in your terminal in a browser.
+### 11. Access the Application
 
-Start from the dashboard page to quickly navigate between the profile, agent, and GPA tools.
+- Open your browser and navigate to `http://127.0.0.1:8000`.
+- Admin login: `admin@demo.local` / `password123`
+- Staff login: `staf@demo.local` / `password123`
 
-## Try These Routes
+---
 
-| Page             | Address                          | Description                                   |
-| ---------------- | -------------------------------- | --------------------------------------------- |
-| Home             | `/`                              | Main welcome page                             |
-| Beranda          | `/beranda?user=Andi`             | Same home page with a personal greeting       |
-| Profile          | `/profil-mahasiswa`              | Student profile without the NRP in the URL    |
-| Valid Profile    | `/mahasiswa/5025241074`          | Student profile using a valid 10-digit NRP    |
-| Rejected Profile | `/mahasiswa/123`                 | Demonstrates the NRP regex guard              |
-| Default Agent    | `/agent`                         | Agent idea page with the default theme        |
-| Themed Agent     | `/agent/magentic`                | Agent idea page with the magentic theme       |
-| Ide Agent        | `/ide-agent`                     | Same magentic page under its own URL          |
-| Light Theme      | `/ide-agent?mode=light`          | Whole site in the light blueprint theme       |
-| GPA Calculator   | `/hitung-ipk/3.50/3.80`          | Calculates the average of two semester scores |
-| Dashboard        | `/dashboard`                     | Navigation hub for the project                |
-| Unknown Path     | Any random path                  | Displays the custom fallback page             |
+## Database and Seeder Information
 
-## Example
+### Tables Created by Spatie
 
-A valid student profile:
+- `permissions` – Stores permissions.
+- `roles` – Stores roles (admin, staf).
+- `model_has_roles` – Many-to-many relationship between users and roles.
+- `model_has_permissions` – Many-to-many relationship between users and individual permissions.
+- `role_has_permissions` – Many-to-many relationship between roles and permissions.
 
-```text
-/mahasiswa/5025241074
+### Data Generated by the Seeder
+
+- 50 dummy academic records generated using Faker.
+- 1 Admin account (`admin@demo.local`, role: admin, all permissions).
+- 1 Staff account (`staf@demo.local`, role: staf, view/create/edit permissions without delete access).
+
+### Commands to Run the Seeder
+
+```bash
+php artisan db:seed --class=DatabaseSeeder
+
+# Or run the following command to start from scratch:
+php artisan migrate:fresh --seed
 ```
 
-An invalid profile:
+### Demo Account Credentials
 
-```text
-/mahasiswa/123
-```
+- **Admin:** `admin@demo.local` – Password: `password123`, Role: admin.
+- **Staff:** `staf@demo.local` – Password: `password123`, Role: staf.
 
-The second address is rejected because the route only accepts an NRP containing exactly 10 digits.
+**Note:** Passwords are not displayed in the public README. For local evaluation, access is available through the auto-login buttons on the login page or by navigating to the login URL and entering the credentials above.
+
+---
+
+## Role and Permission Matrix
+
+| Permission | Admin | Staff |
+|---|---|---|
+| view dashboard | ✅ | ✅ |
+| view data | ✅ | ✅ |
+| create data | ✅ | ✅ |
+| edit data | ✅ | ✅ |
+| delete data | ✅ | ❌ |
+| manage users | ✅ | ❌ |
+
+**Explanation:**
+- Admin has all 6 permissions listed above.
+- Staff has only 4 permissions: view dashboard, view data, create data, and edit data.
+- Delete functionality and user management are exclusively available to Admin.
+
+---
 
 ## Project Structure
 
-The main routing, controller, and view files are organized as follows:
+### Important Files and Directories
 
-```text
-app/
-├── Http/
-│   ├── Controllers/
-│   │   └── PageController.php
-│   └── Middleware/
-│       └── ResolveTheme.php
-└── Support/
-    └── AcademicData.php
+| Path | Description |
+|---|---|
+| `app/Models/AcademicData.php` | Model for academic records. |
+| `app/Models/User.php` | User model with the Spatie `HasRoles` trait. |
+| `app/Http/Controllers/AdminDashboardController.php` | Admin dashboard controller. |
+| `app/Http/Controllers/AcademicDataController.php` | Academic data CRUD controller. |
+| `database/seeders/DatabaseSeeder.php` | Main seeder (creates 50 records and demo accounts). |
+| `database/seeders/RolePermissionSeeder.php` | Role and permission seeder. |
+| `database/factories/AcademicDataFactory.php` | Faker factory for academic records. |
+| `resources/views/layouts/admin.blade.php` | Master AdminLTE layout. |
+| `resources/views/admin/dashboard.blade.php` | Dashboard view with statistics widgets. |
+| `resources/views/admin/academic-data/index.blade.php` | Academic data listing view with search and pagination. |
+| `resources/views/admin/academic-data/form.blade.php` | Create/edit form view. |
+| `routes/web.php` | Application routes. |
+| `config/permission.php` | Spatie Permission configuration. |
+| `composer.json` | Laravel dependencies. |
 
-resources/
-├── css/
-│   └── app.css
-└── views/
-    ├── components/
-    │   ├── info-card.blade.php
-    │   └── status-banner.blade.php
-    ├── layouts/
-    │   └── app.blade.php
-    ├── agent/
-    ├── dashboard/
-    ├── errors/
-    ├── mahasiswa/
-    ├── home.blade.php
-    └── ipk/
+---
 
-routes/
-└── web.php
+## Testing Guide
 
-public/
-└── build/
-```
+### Authentication
 
-The page routes point at `PageController`, the theme query is resolved in `ResolveTheme`, and the site styling is compiled from `resources/css` into `public/build`.
+1. **Admin Login:** Navigate to `http://127.0.0.1:8000/login` and enter `admin@demo.local` / `password123`.
+2. **Staff Login:** Navigate to `http://127.0.0.1:8000/login` and enter `staf@demo.local` / `password123`.
+3. **Logout:** Click the logout button in the top-right navigation bar.
+4. **Dashboard Access Protection:** Users who are not logged in should be redirected to the login page when attempting to access protected dashboard pages.
 
-## Assignment Focus
+### RBAC
 
-This project demonstrates the following concepts:
+1. **Admin Access:**
+   - The Admin dashboard displays all 4 statistics widgets.
+   - The "Add Data" and "Manage Users" buttons are visible.
+   - Admin can create, edit, and delete academic records.
 
-* Basic routes
-* Route parameters
-* Optional route parameters
-* Route constraints using regular expressions
-* Named routes
-* Route groups and prefixes
-* Fallback routes
-* Route-driven calculations
-* One controller serving several pages
-* Blade layout inheritance without repeated HTML
-* Blade components with parameters and slots
-* Local CSS bundling with Vite and NPM
-* Query-driven greeting and site theme
+2. **Staff Access:**
+   - The dashboard is accessible but displays only 3 main statistics widgets (without detailed role/permission statistics).
+   - The "Manage Users" button is not visible.
+   - The delete button is hidden through Blade authorization directives.
+   - Staff can view, add, and edit records but **cannot delete them**.
+
+3. **Role-Based Menu Visibility:**
+   - The "User Management" menu is only visible to Admin.
+   - Standard menus (Dashboard, Data) are visible to both roles.
+
+4. **Admin-Only Delete Operations:**
+   - Staff cannot see the delete button.
+   - If Staff attempts to access the delete URL directly, the application returns HTTP 403 Forbidden.
+
+5. **Direct URL Access Restrictions:**
+   - Directly accessing the `/academic-data/{id}` delete endpoint as Staff must return HTTP 403 Forbidden.
+   - The `permission:delete data` middleware prevents unauthorized access to the delete functionality.
+
+### Dashboard
+
+1. **At Least Three Dynamic Statistics Widgets:**
+   - Total Users: `{{ User::count() }}`
+   - Total Academic Records: `{{ AcademicData::count() }}`
+   - Total Roles: `{{ Role::count() }}`
+   - Total Permissions: `{{ Permission::count() }}`
+
+2. **Data Accuracy:**
+   - All widget values must match the actual number of records stored in the database.
+
+### Search and Pagination
+
+1. **Search Results:** Enter a keyword in the search form and verify that only matching records are displayed.
+2. **Empty Search:** Clear the search field and verify that all records are displayed normally.
+3. **Pagination:** Verify that page navigation works correctly.
+4. **Search Parameter Persistence:** Verify that the search keyword remains in the URL when navigating between pages, for example `?search=keyword&page=2`.
+
+### Seeder and Demo Login
+
+1. **Faker Dummy Data:** Verify that Faker successfully generates exactly 50 academic records.
+2. **Demo Accounts:** Verify that the Admin and Staff accounts are created correctly by checking the `users`, `roles`, and `permissions` tables.
+3. **Auto-Login Buttons:**
+   - Open `/auto-login/admin` to log in as Admin.
+   - Open `/auto-login/staf` to log in as Staff.
+   - These routes must only be accessible in the `local` or `testing` environments.

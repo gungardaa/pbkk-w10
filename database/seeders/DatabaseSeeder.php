@@ -2,24 +2,44 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\AcademicData;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
-     * Seed the application's database.
+     * Run the database seeds.
+     *
+     * @return void
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create academic data with Faker
+        $this->call([RolePermissionSeeder::class]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Generate 50 academic data records using Faker
+        AcademicData::factory()->count(50)->create();
+
+        // Create demo Admin account
+        $adminUser = \App\Models\User::firstOrCreate(
+            ['email' => 'admin@demo.local'],
+            [
+                'name' => 'Admin Demo',
+                'password' => bcrypt('password123'), // password will be hashed
+            ]
+        );
+        $adminUser->assignRole('admin');
+
+        // Create demo Staf account
+        $stafUser = \App\Models\User::firstOrCreate(
+            ['email' => 'staf@demo.local'],
+            [
+                'name' => 'Staf Demo',
+                'password' => bcrypt('password123'),
+            ]
+        );
+        $stafUser->assignRole('staf');
     }
 }

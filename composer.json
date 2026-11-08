@@ -7,11 +7,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "jeroennoten/laravel-adminlte": "^4.0",
         "laravel/framework": "^13.17",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "spatie/laravel-permission": "^8.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
@@ -79,8 +82,19 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        }
+        },
+        "secure-http": false
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "packagist.org": {
+            "type": "composer",
+            "url": "http://repo.packagist.org"
+        },
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
+    }
 }

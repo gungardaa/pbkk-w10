@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>@yield('title', 'Arda Nareswara, ITS Academic Profile')</title>
-@vite(['resources/css/app.css', 'resources/js/app.js'])
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Arda Nareswara, ITS Academic Profile')</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen antialiased" data-theme="{{ $theme ?? 'dark' }}">
-@php($theme = $theme ?? 'dark')
 <div class="fixed inset-0 -z-10">
-  <div class="absolute inset-0 bg-grid"></div>
-  <div class="glow-orb w-[480px] h-[480px] -top-40 left-1/2 -translate-x-1/2" style="background:rgba(36,96,173,.28)"></div>
-  <div class="glow-orb w-[320px] h-[320px] top-1/3 -left-24" style="background:rgba(77,243,255,.10)"></div>
-  <div class="glow-orb w-[300px] h-[300px] bottom-0 right-0" style="background:rgba(107,228,210,.08)"></div>
+    <div class="absolute inset-0 bg-grid"></div>
+    <div class="glow-orb w-[480px] h-[480px] -top-40 left-1/2 -translate-x-1/2" style="background:rgba(36,96,173,.28)"></div>
+    <div class="glow-orb w-[320px] h-[320px] top-1/3 -left-24" style="background:rgba(77,243,255,.10)"></div>
+    <div class="glow-orb w-[300px] h-[300px] bottom-0 right-0" style="background:rgba(107,228,210,.08)"></div>
 </div>
 
 <header class="sticky top-0 z-40 border-b border-cyan-200/10" style="background:var(--header);backdrop-filter:blur(14px)">
@@ -20,7 +24,7 @@
     <a href="{{ route('home') }}" class="flex items-center gap-3">
       <span class="font-display grid h-10 w-10 place-items-center rounded-xl text-sm font-bold text-[var(--on-accent)]" style="background:var(--hairline);box-shadow:0 0 18px rgba(77,243,255,.5)">AN</span>
       <span class="leading-tight">
-        <span class="font-display block text-sm font-bold tracking-wide">ARDA NARESWARA</span>
+        <span class="font-display block text-sm font-bold">ARDA NARESWARA</span>
         <span class="font-mono2 block text-[11px] text-[var(--body)]">ITS sandbox routes</span>
       </span>
     </a>
@@ -56,20 +60,5 @@
   </div>
 </footer>
 
-<script>
-  const menuBtn = document.getElementById('menuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  if (menuBtn && mobileMenu) {
-    menuBtn.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('hidden');
-      menuBtn.setAttribute('aria-expanded', String(!open));
-    });
-  }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
-</script>
+<script src="https://cdn.jsdelivr.net/npm/adminlte@4.5.1/dist/js/adminlte.min.js"></script>
 @stack('scripts')
-</body>
-</html>
