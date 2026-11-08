@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Admin Dashboard')</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/adminlte@4.5.1/dist/css/adminlte.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/adminlte@4.5.1/dist/js/adminlte.min.js"></script>
+    {{-- AdminLTE v4 local assets (published to public/vendor/adminlte/dist) --}}
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+    {{-- Font Awesome (icons used by AdminLTE) --}}
     <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/js/all.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -115,7 +116,7 @@
     </footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/adminlte@4.5.1/dist/js/adminlte.min.js"></script>
+<script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
 @yield('scripts')
 </body>
 </html>
